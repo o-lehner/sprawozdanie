@@ -335,7 +335,6 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
                 options={{
                   dateFormat: 'Y-m-d', // Internal format for saving
                   locale: Polish,
-                  disableMobile: true,
                   altInput: true, // Enable alternative input for display
                   altFormat: 'd F Y', // User-friendly display format: DD FullMonthName YYYY
                 }}
