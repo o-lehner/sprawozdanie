@@ -35,7 +35,7 @@ const EntryList: React.FC<EntryListProps> = ({ entries, onEdit }) => {
               
               {/* Data */}
               <div className="text-sm text-gray-500 mt-2 ios-button">
-                {format(new Date(entry.date), 'd MMM yyyy', { locale: pl })}
+                {format(new Date(entry.date), 'd MMMM yyyy', { locale: pl })}
               </div>
             </div>
           </div>
