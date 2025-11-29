@@ -16,8 +16,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}']
       },
       manifest: {
-        name: 'Time Tracker PWA',
-        short_name: 'TimeTracker',
+        name: 'Sprawozdanie',
+        short_name: 'Sprawozdanie',
         description: 'Prosta PWA do liczenia czasu',
         theme_color: '#ffffff',
         icons: [
