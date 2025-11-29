@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listopad 2025 - Lista zadań</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        /* iOS-style bold typography */
+        .ios-title {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .ios-button {
+            font-weight: 600;
+        }
+        
+        /* Smooth iOS animations */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        button {
+            transition: all 0.2s ease;
+        }
+        
+        button:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Główny kontener aplikacji -->
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg">
+        
+        <!-- NAGŁÓWEK Z NAWIGACJĄ MIESIĘCZNĄ -->
+        <header class="bg-white px-6 py-5 flex items-center justify-between border-b border-gray-200">
+            <!-- Przycisk poprzedni miesiąc -->
+            <button id="prevMonth" class="text-blue-500 hover:text-blue-600 transition-colors p-2 -ml-2">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            
+            <!-- Tytuł z aktualnym miesiącem -->
+            <h1 id="monthTitle" class="text-2xl ios-title text-gray-900">Listopad 2025</h1>
+            
+            <!-- Przycisk następny miesiąc -->
+            <button id="nextMonth" class="text-blue-500 hover:text-blue-600 transition-colors p-2 -mr-2">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- OBSZAR LISTY ZADAŃ -->
+        <main class="px-4 py-6">
+            <!-- Kontener na wszystkie zadania -->
+            <div id="tasksList" class="space-y-3 mb-24">
+                <!-- Zadania będą dodawane tutaj dynamicznie przez JavaScript -->
+            </div>
+
+            <!-- Informacja o braku zadań (pokazywana tylko gdy lista jest pusta) -->
+            <div id="emptyState" class="text-center py-16 text-gray-400">
+                <p class="text-xl ios-title">Brak zadań</p>
+                <p class="text-base mt-3">Kliknij przycisk poniżej, aby dodać nowe zadanie</p>
+            </div>
+        </main>
+
+        <!-- STOPKA Z STATYSTYKAMI I PRZYCISKIEM DODAWANIA -->
+        <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 max-w-md mx-auto">
+            <!-- Przycisk dodawania nowego zadania -->
+            <div class="px-5 py-4">
+                <button id="addTaskBtn" class="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white ios-button text-lg py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8"/>
+                    </svg>
+                    Dodaj wpis
+                </button>
+            </div>
+
+            <!-- Statystyki czasu -->
+            <div class="px-5 pb-5 text-base text-gray-600">
+                <span class="ios-button">Ogólnie: </span>
+                <span id="totalTime" class="ios-title text-gray-900">0h 0m</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MODAL DODAWANIA/EDYCJI ZADANIA -->
+    <div id="taskModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-100 w-full max-w-md rounded-3xl shadow-2xl transform transition-all">
+            <!-- Nagłówek modala -->
+            <div class="px-6 py-5 flex items-center justify-between">
+                <button id="cancelBtn" class="text-blue-500 hover:text-blue-600 ios-button text-base">Anuluj</button>
+                <span class="text-gray-400 text-sm opacity-0">Placeholder</span>
+                <button id="saveBtn" class="text-gray-400 hover:text-blue-500 ios-button text-base">Zapisz</button>
+            </div>
+
+            <!-- Formularz zadania -->
+            <div class="px-6 pb-6 space-y-5">
+                <!-- Tytuł NOWY WPIS -->
+                <div>
+                    <h2 id="modalTitle" class="text-3xl ios-title text-black">Nowy wpis</h2>
+                </div>
+
+                <!-- Czas - godziny i minuty -->
+                <div>
+                    <label class="block text-xs text-gray-400 uppercase tracking-wide mb-2 ios-button">Czas</label>
+                    <div class="bg-white rounded-2xl p-6">
+                        <div class="flex items-center justify-center gap-16">
+                            <!-- Godziny -->
+                            <div class="text-center flex-1">
+                                <label class="block text-xs text-gray-400 uppercase tracking-wide mb-3 ios-button">GODZINY</label>
+                                <input 
+                                    type="number" 
+                                    id="hours" 
+                                    min="0" 
+                                    max="23" 
+                                    value="0" 
+                                    class="w-full text-5xl ios-title text-center bg-transparent border-0 focus:outline-none"
+                                />
+                            </div>
+                            
+                            <!-- Minuty -->
+                            <div class="text-center flex-1">
+                                <label class="block text-xs text-gray-400 uppercase tracking-wide mb-3 ios-button">MINUTY</label>
+                                <input 
+                                    type="number" 
+                                    id="minutes" 
+                                    min="0" 
+                                    max="59" 
+                                    value="0" 
+                                    class="w-full text-5xl ios-title text-center bg-transparent border-0 focus:outline-none"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kategoria -->
+                <div>
+                    <label class="block text-xs text-gray-400 uppercase tracking-wide mb-2 ios-button">Kategoria</label>
+                    <div class="bg-white rounded-2xl px-6 py-4">
+                        <div class="flex items-center justify-between border-b border-gray-200 pb-4">
+                            <select 
+                                id="category" 
+                                class="flex-1 text-lg py-2 border-0 focus:outline-none focus:ring-0 bg-transparent"
+                            >
+                                <option value="">Wybierz</option>
+                                <option value="praca">Praca</option>
+                                <option value="nauka">Nauka</option>
+                                <option value="sport">Sport</option>
+                                <option value="relaks">Relaks</option>
+                                <option value="inne">Inne</option>
+                            </select>
+                            <button id="serviceBtn" class="text-blue-500 hover:text-blue-600 text-base ios-button">
+                                Służba ◊
+                            </button>
+                        </div>
+                        <button id="addCategoryBtn" class="text-blue-500 hover:text-blue-600 text-base mt-4 flex items-center gap-2 ios-button w-full">
+                            <span class="text-xl">+</span>
+                            <span>Dodaj nową kategorię</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Data -->
+                <div>
+                    <label class="block text-xs text-gray-400 uppercase tracking-wide mb-2 ios-button">Data</label>
+                    <div class="bg-white rounded-2xl px-6 py-5 flex items-center justify-between">
+                        <span class="text-lg">Wybierz dzień</span>
+                        <input 
+                            type="date" 
+                            id="taskDate" 
+                            class="text-lg ios-button border-0 focus:outline-none focus:ring-0 bg-transparent text-gray-600"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // ZMIENNE GLOBALNE I STAN APLIKACJI
+        // ==========================================
+        
+        let tasks = []; // Tablica przechowująca wszystkie zadania
+        let currentMonth = 10; // Aktualny miesiąc (10 = listopad, indeksowanie od 0)
+        let currentYear = 2025; // Aktualny rok
+        let editingTaskId = null; // ID edytowanego zadania (null = nowe zadanie)
+        
+        // Nazwy miesięcy w języku polskim
+        const monthNames = [
+            'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+            'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
+        ];
+
+        // ==========================================
+        // REFERENCJE DO ELEMENTÓW DOM
+        // ==========================================
+        
+        const taskModal = document.getElementById('taskModal');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const tasksList = document.getElementById('tasksList');
+        const emptyState = document.getElementById('emptyState');
+        const monthTitle = document.getElementById('monthTitle');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+        const totalTimeEl = document.getElementById('totalTime');
+
+        // ==========================================
+        // FUNKCJE POMOCNICZE
+        // ==========================================
+        
+        // Formatuje czas w minutach na format "Xh Ym"
+        function formatTime(totalMinutes) {
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            return `${hours}h ${minutes}m`;
+        }
+
+        // Generuje unikalny ID dla zadania
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Formatuje datę na format "DD MMM YYYY" po polsku
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const months = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
+            return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        }
+
+        // Aktualizuje tytuł nagłówka z nazwą miesiąca
+        function updateMonthTitle() {
+            monthTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+        }
+
+        // Oblicza całkowity czas wszystkich zadań w aktualnym miesiącu
+        function calculateTotalTime() {
+            const filteredTasks = tasks.filter(task => {
+                const taskDate = new Date(task.date);
+                return taskDate.getMonth() === currentMonth && taskDate.getFullYear() === currentYear;
+            });
+            
+            const total = filteredTasks.reduce((sum, task) => sum + task.totalMinutes, 0);
+            totalTimeEl.textContent = formatTime(total);
+        }
+
+        // ==========================================
+        // FUNKCJE ZARZĄDZANIA MODALEM
+        // ==========================================
+        
+        // Otwiera modal do dodawania nowego zadania
+        function openModal() {
+            editingTaskId = null;
+            document.getElementById('modalTitle').textContent = 'Nowy wpis';
+            document.getElementById('hours').value = '0';
+            document.getElementById('minutes').value = '0';
+            document.getElementById('category').value = '';
+            
+            // Ustawia dzisiejszą datę
+            const today = new Date();
+            document.getElementById('taskDate').value = today.toISOString().split('T')[0];
+            
+            taskModal.classList.remove('hidden');
+        }
+
+        // Zamyka modal
+        function closeModal() {
+            taskModal.classList.add('hidden');
+            editingTaskId = null;
+        }
+
+        // Otwiera modal do edycji istniejącego zadania
+        function openEditModal(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            editingTaskId = taskId;
+            document.getElementById('modalTitle').textContent = 'Edytuj wpis';
+            document.getElementById('hours').value = Math.floor(task.totalMinutes / 60);
+            document.getElementById('minutes').value = task.totalMinutes % 60;
+            document.getElementById('category').value = task.category;
+            document.getElementById('taskDate').value = task.date;
+            
+            taskModal.classList.remove('hidden');
+        }
+
+        // ==========================================
+        // FUNKCJE ZARZĄDZANIA ZADANIAMI
+        // ==========================================
+        
+        // Zapisuje nowe zadanie lub aktualizuje istniejące
+        function saveTask() {
+            const hours = parseInt(document.getElementById('hours').value) || 0;
+            const minutes = parseInt(document.getElementById('minutes').value) || 0;
+            const category = document.getElementById('category').value;
+            const date = document.getElementById('taskDate').value;
+
+            const totalMinutes = hours * 60 + minutes;
+
+            // Generuj nazwę zadania na podstawie czasu i kategorii
+            const name = category ? `${category} - ${formatTime(totalMinutes)}` : formatTime(totalMinutes);
+
+            if (editingTaskId) {
+                // Edycja istniejącego zadania
+                const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
+                if (taskIndex !== -1) {
+                    tasks[taskIndex] = {
+                        ...tasks[taskIndex],
+                        name,
+                        totalMinutes,
+                        category,
+                        date
+                    };
+                }
+            } else {
+                // Dodawanie nowego zadania
+                const newTask = {
+                    id: generateId(),
+                    name,
+                    totalMinutes,
+                    category,
+                    date,
+                    completed: false
+                };
+                tasks.push(newTask);
+            }
+
+            closeModal();
+            renderTasks();
+            calculateTotalTime();
+        }
+
+        // Usuwa zadanie po jego ID
+        function deleteTask(taskId) {
+            if (confirm('Czy na pewno chcesz usunąć to zadanie?')) {
+                tasks = tasks.filter(t => t.id !== taskId);
+                renderTasks();
+                calculateTotalTime();
+            }
+        }
+
+        // Przełącza stan ukończenia zadania
+        function toggleTaskComplete(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                renderTasks();
+            }
+        }
+
+        // ==========================================
+        // RENDEROWANIE INTERFEJSU
+        // ==========================================
+        
+        // Renderuje listę zadań dla aktualnego miesiąca
+        function renderTasks() {
+            // Filtruje zadania dla aktualnego miesiąca i roku
+            const filteredTasks = tasks.filter(task => {
+                const taskDate = new Date(task.date);
+                return taskDate.getMonth() === currentMonth && taskDate.getFullYear() === currentYear;
+            });
+
+            // Pokazuje/ukrywa informację o braku zadań
+            if (filteredTasks.length === 0) {
+                emptyState.classList.remove('hidden');
+                tasksList.innerHTML = '';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
+            // Sortuje zadania po dacie (najnowsze na górze)
+            filteredTasks.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Tworzy HTML dla każdego zadania
+            tasksList.innerHTML = filteredTasks.map(task => `
+                <div class="bg-white border-2 border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all">
+                    <!-- Nagłówek zadania z przyciskiem checkbox -->
+                    <div class="flex items-start gap-4">
+                        <button 
+                            onclick="toggleTaskComplete('${task.id}')" 
+                            class="mt-1 flex-shrink-0 w-6 h-6 rounded-full border-2 ${task.completed ? 'bg-blue-500 border-blue-500' : 'border-gray-300'} flex items-center justify-center hover:border-blue-500 transition-all"
+                        >
+                            ${task.completed ? `
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            ` : ''}
+                        </button>
+                        
+                        <!-- Treść zadania -->
+                        <div class="flex-1">
+                            <h3 class="text-lg ios-title text-gray-900 ${task.completed ? 'line-through text-gray-400' : ''}">${task.name}</h3>
+                            
+                            <!-- Informacje o czasie i kategorii -->
+                            <div class="flex items-center gap-4 mt-2 text-base text-gray-600">
+                                <span class="flex items-center gap-1 ios-button">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
+                                    </svg>
+                                    ${formatTime(task.totalMinutes)}
+                                </span>
+                                ${task.category ? `<span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm ios-button">${task.category}</span>` : ''}
+                            </div>
+                            
+                            <!-- Data -->
+                            <div class="text-sm text-gray-500 mt-2 ios-button">${formatDate(task.date)}</div>
+                        </div>
+                        
+                        <!-- Przyciski akcji (edycja i usuwanie) -->
+                        <div class="flex gap-2 flex-shrink-0">
+                            <button 
+                                onclick="openEditModal('${task.id}')" 
+                                class="text-blue-500 hover:text-blue-600 p-2 rounded-lg hover:bg-blue-50 transition-all"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </button>
+                            <button 
+                                onclick="deleteTask('${task.id}')" 
+                                class="text-red-500 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 transition-all"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // NAWIGACJA MIĘDZY MIESIĄCAMI
+        // ==========================================
+        
+        // Przechodzi do poprzedniego miesiąca
+        function goToPreviousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updateMonthTitle();
+            renderTasks();
+            calculateTotalTime();
+        }
+
+        // Przechodzi do następnego miesiąca
+        function goToNextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateMonthTitle();
+            renderTasks();
+            calculateTotalTime();
+        }
+
+        // ==========================================
+        // OBSŁUGA ZDARZEŃ (EVENT LISTENERS)
+        // ==========================================
+        
+        // Przycisk dodawania zadania
+        addTaskBtn.addEventListener('click', openModal);
+        
+        // Przyciski w modalu
+        cancelBtn.addEventListener('click', closeModal);
+        saveBtn.addEventListener('click', saveTask);
+        
+        // Nawigacja między miesiącami
+        prevMonthBtn.addEventListener('click', goToPreviousMonth);
+        nextMonthBtn.addEventListener('click', goToNextMonth);
+        
+        // Zamykanie modala po kliknięciu w tło
+        taskModal.addEventListener('click', (e) => {
+            if (e.target === taskModal) {
+                closeModal();
+            }
+        });
+
+        // Obsługa klawisza Enter w formularzu (zapisuje zadanie)
+        document.getElementById('hours').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveTask();
+            }
+        });
+        
+        document.getElementById('minutes').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveTask();
+            }
+        });
+
+        // ==========================================
+        // INICJALIZACJA APLIKACJI
+        // ==========================================
+        
+        // Uruchamia aplikację po załadowaniu strony
+        updateMonthTitle();
+        renderTasks();
+        calculateTotalTime();
+    </script>
+</body>
+</html>
