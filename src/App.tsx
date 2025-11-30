@@ -114,6 +114,7 @@ function App() {
         isOpen={isCategorySummaryModalOpen}
         onClose={() => setIsCategorySummaryModalOpen(false)}
         entries={entries}
+        currentMonth={currentMonth}
       />
     </div>
   );

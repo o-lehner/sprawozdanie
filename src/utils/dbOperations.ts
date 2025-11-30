@@ -25,6 +25,28 @@ async function deleteEntry(id: number): Promise<void> {
   return db.entries.delete(id);
 }
 
+async function getEntriesByServiceYear(currentDate: Date): Promise<Entry[]> {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth(); // 0-indexed (0-11)
+
+  let startYear;
+  // If the current month is September or later, the service year starts this year.
+  // Otherwise, it started last year. (September is month index 8)
+  if (month >= 8) {
+    startYear = year;
+  } else {
+    startYear = year - 1;
+  }
+
+  const startDate = format(new Date(startYear, 8, 1), 'yyyy-MM-dd'); // September 1st
+  const endDate = format(new Date(startYear + 1, 7, 31), 'yyyy-MM-dd'); // August 31st of next year
+
+  return db.entries
+    .where('date')
+    .between(startDate, endDate, true, true)
+    .toArray();
+}
+
 // Category Operations
 async function addCategory(categoryName: string): Promise<number> {
   try {
@@ -55,6 +77,7 @@ const dbOperations = {
   getEntriesByMonth,
   updateEntry,
   deleteEntry,
+  getEntriesByServiceYear,
   addCategory,
   getCategories,
   deleteCategory,
