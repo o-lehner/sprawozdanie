@@ -29,13 +29,14 @@ const EntryList: React.FC<EntryListProps> = ({ entries, onEdit }) => {
           <div className="flex items-start gap-4">
             {/* Treść zadania */}
             <div className="flex-1">
-              <h3 className="text-lg ios-title text-gray-900">
-                {entry.hours}h {entry.minutes}m | {entry.category || 'Bez kategorii'}
-              </h3>
+              <div className="flex justify-between items-center text-lg ios-title text-gray-900">
+                <span>{entry.hours}h {entry.minutes}m</span>
+                <span>{entry.category || 'Bez kategorii'}</span>
+              </div>
               
               {/* Data */}
               <div className="text-sm text-gray-500 mt-2 ios-button">
-                {format(new Date(entry.date), 'd MMMM yyyy', { locale: pl })}
+                {format(new Date(entry.date), 'EEE dd MMM yyyy', { locale: pl })}
               </div>
             </div>
           </div>

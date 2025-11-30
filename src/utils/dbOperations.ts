@@ -1,4 +1,5 @@
 import { db, type Entry, type Category } from '../db';
+import { format } from 'date-fns';
 
 // Entry Operations
 async function addEntry(entry: Omit<Entry, 'id'>): Promise<number> {
@@ -6,8 +7,8 @@ async function addEntry(entry: Omit<Entry, 'id'>): Promise<number> {
 }
 
 async function getEntriesByMonth(year: number, month: number): Promise<Entry[]> {
-  const startOfMonth = new Date(year, month - 1, 1).toISOString().split('T')[0];
-  const endOfMonth = new Date(year, month, 0).toISOString().split('T')[0]; // last day of the month
+  const startOfMonth = format(new Date(year, month - 1, 1), 'yyyy-MM-dd');
+  const endOfMonth = format(new Date(year, month, 0), 'yyyy-MM-dd');
 
   return db.entries
     .where('date')
