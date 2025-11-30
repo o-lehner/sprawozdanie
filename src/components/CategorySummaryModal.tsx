@@ -99,7 +99,7 @@ const CategorySummaryModal: React.FC<CategorySummaryModalProps> = ({ isOpen, onC
                 ) : (
                   <div>
                     <span className="ios-title text-2xl text-gray-900">{formatTime(yearlyTotalMinutes)}</span>
-                    <span className="text-gray-500 text-lg"> / 600h</span>
+
                   </div>
                 )}
               </div>
