@@ -51,16 +51,16 @@ const CategorySummaryModal: React.FC<CategorySummaryModalProps> = ({ isOpen, onC
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-gray-100 w-full max-w-md rounded-3xl shadow-2xl transform transition-all">
-        <div className="px-6 py-5 flex items-center justify-between border-b border-gray-200">
-          <h2 className="text-xl ios-title text-black">Podsumowanie</h2>
-          <button 
-            onClick={onClose}
-            className="text-blue-500 hover:text-blue-600 ios-button text-base"
-          >
-            Zamknij
-          </button>
-        </div>
-
+                <div className="px-6 py-5 flex items-center justify-between">
+                  <h2 className="text-xl ios-title text-black">Podsumowanie</h2>
+                  <button
+                    onClick={onClose}
+                    className="text-blue-500 hover:text-blue-600 ios-button text-base"
+                  >
+                    Zamknij
+                  </button>
+                </div>
+                <div className="mx-6 border-b border-gray-300"></div>
         <div className="px-6 py-4 max-h-[60vh] overflow-y-auto">
           <div className="pb-4 mb-4 border-b border-gray-300">
             {Object.entries(categoryTimes).length > 0 ? (
@@ -78,19 +78,19 @@ const CategorySummaryModal: React.FC<CategorySummaryModalProps> = ({ isOpen, onC
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <label htmlFor="yearly-summary-toggle" className="ios-button text-gray-700">
-                Podsumowanie Roczne
+                Podsumowanie roczne
               </label>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  id="yearly-summary-toggle" 
-                  className="sr-only peer"
-                  checked={showYearlySummary}
-                  onChange={() => setShowYearlySummary(prev => !prev)} 
-                />
-                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
+                                          <label htmlFor="yearly-summary-toggle" className="relative inline-flex cursor-pointer items-center">
+                                            <input
+                                              type="checkbox"
+                                              id="yearly-summary-toggle"
+                                              className="sr-only peer"
+                                              checked={showYearlySummary}
+                                              onChange={() => setShowYearlySummary(prev => !prev)}
+                                            />
+                                            <div className="w-16 h-8 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:bg-blue-600 transition-all duration-300"></div>
+                                            <div className="absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition-all duration-300 peer-checked:translate-x-[16px]"></div>
+                                          </label>            </div>
             
             {showYearlySummary && (
               <div className="bg-white rounded-xl p-4 text-center">
