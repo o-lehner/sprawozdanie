@@ -31,7 +31,15 @@ const EntryList: React.FC<EntryListProps> = ({ entries, onEdit }) => {
             <div className="flex-1">
               <div className="flex justify-between items-center text-lg ios-title text-gray-900">
                 <span>{entry.hours}h {entry.minutes}m</span>
-                <span>{entry.category || 'Bez kategorii'}</span>
+                <span>
+                  {entry.category ? (
+                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm ios-button">
+                      {entry.category}
+                    </span>
+                  ) : (
+                    'Bez kategorii'
+                  )}
+                </span>
               </div>
               
               {/* Data */}
