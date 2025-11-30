@@ -176,10 +176,10 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
                 {/* Godziny */}
                 <div className="text-center flex-1">
                   <label className="block text-xs text-gray-400 uppercase tracking-wide mb-3 ios-button">GODZINY</label>
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex items-center justify-center gap-1">
                     <button 
                       onClick={() => handleHoursAdjust(-1)}
-                      className="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 text-2xl font-bold transition-colors active:bg-gray-400"
+                      className="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 text-xl font-bold transition-colors active:bg-gray-400"
                     >
                       -
                     </button>
@@ -190,11 +190,11 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
                       max="99" 
                       value={hours} 
                       onChange={(e) => handleTimeChange(e, 'hours')}
-                      className="text-5xl ios-title text-center bg-transparent border-0 focus:outline-none w-16"
+                      className="text-4xl ios-title text-center bg-transparent border-0 focus:outline-none w-14"
                     />
                     <button 
                       onClick={() => handleHoursAdjust(1)}
-                      className="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 text-2xl font-bold transition-colors active:bg-gray-400"
+                      className="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 text-xl font-bold transition-colors active:bg-gray-400"
                     >
                       +
                     </button>
@@ -204,10 +204,10 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
                 {/* Minuty */}
                 <div className="text-center flex-1">
                   <label className="block text-xs text-gray-400 uppercase tracking-wide mb-3 ios-button">MINUTY</label>
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex items-center justify-center gap-1">
                     <button 
                       onClick={() => handleMinutesAdjust(-5)}
-                      className="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 text-2xl font-bold transition-colors active:bg-gray-400"
+                      className="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 text-xl font-bold transition-colors active:bg-gray-400"
                     >
                       -
                     </button>
@@ -218,11 +218,11 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
                       max="59" 
                       value={minutes} 
                       onChange={(e) => handleTimeChange(e, 'minutes')}
-                      className="text-5xl ios-title text-center bg-transparent border-0 focus:outline-none w-16"
+                      className="text-4xl ios-title text-center bg-transparent border-0 focus:outline-none w-14"
                     />
                     <button 
                       onClick={() => handleMinutesAdjust(5)}
-                      className="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 text-2xl font-bold transition-colors active:bg-gray-400"
+                      className="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 text-xl font-bold transition-colors active:bg-gray-400"
                     >
                       +
                     </button>
