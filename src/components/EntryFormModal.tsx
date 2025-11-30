@@ -32,6 +32,12 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
   const [newCategoryName, setNewCategoryName] = useState<string>('');
   const [isManagingCategories, setIsManagingCategories] = useState(false); // New state for managing categories
 
+  const handleDateChangeForPicker = (date: Date | undefined) => {
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
+
   useEffect(() => {
     if (entryToEdit) {
       setHours(entryToEdit.hours.toString());
@@ -50,7 +56,7 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
     setSelectedDate(new Date());
     setNewCategoryName('');
     setIsAddingCategory(false);
-    setIsManagingCategories(false); // Reset this state on form reset
+    setIsManagingCategories(false);
   };
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'hours' | 'minutes') => {
@@ -328,7 +334,7 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
             <div className="bg-white rounded-2xl p-3">
                 <DatePicker
                     date={selectedDate}
-                    setDate={setSelectedDate}
+                    setDate={handleDateChangeForPicker}
                 />
             </div>
           </div>
