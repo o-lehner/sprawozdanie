@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Entry, Category } from '../utils/dbOperations';
-import Flatpickr from 'react-flatpickr';
-import 'flatpickr/dist/themes/material_blue.css';
-import { Polish } from 'flatpickr/dist/l10n/pl';
+import { DatePicker } from './ui/date-picker';
 import { format } from 'date-fns';
 
 interface EntryFormModalProps {
@@ -252,7 +250,6 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
                       onClick={() => setIsAddingCategory(true)}
                       className="text-blue-500 hover:text-blue-600 text-base flex items-center gap-2 ios-button"
                     >
-                      <span className="text-xl">+</span>
                       <span>Dodaj kategorię</span>
                     </button>
                     <button 
@@ -328,18 +325,11 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
           {/* Data */}
           <div>
             <label className="block text-xs text-gray-400 uppercase tracking-wide mb-2 ios-button">Data</label>
-            <div className="bg-white rounded-2xl">
-              <Flatpickr
-                value={selectedDate}
-                onChange={([date]) => date && setSelectedDate(date)}
-                options={{
-                  dateFormat: 'Y-m-d', // Internal format for saving
-                  locale: Polish,
-                  altInput: true, // Enable alternative input for display
-                  altFormat: 'd F Y', // User-friendly display format: DD FullMonthName YYYY
-                }}
-                className="text-lg ios-button border-0 focus:outline-none focus:ring-0 bg-transparent text-gray-600 text-left w-full px-6 py-5"
-              />
+            <div className="bg-white rounded-2xl p-3">
+                <DatePicker
+                    date={selectedDate}
+                    setDate={setSelectedDate}
+                />
             </div>
           </div>
 
